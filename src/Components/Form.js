@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 const formFieldsData = [ 
   {
@@ -46,12 +46,22 @@ const formFieldsData = [
   }
 ];
 
+const createInitialState = () => {
+  const initialState = {};
+  formFieldsData.find(item=> {
+    initialState[item.name] = '';
+  })
+  return initialState;
+};
+
 const onSubmitHandler = e => {
   e.preventDefault();
   console.log('Submitted Form Data:');
 }
 
 const Form = () => {
+  const [formState, setFormState] = useState(createInitialState());
+
   return (
   <form onSubmit={onSubmitHandler}>
     <h1>Create Your Account</h1>
