@@ -72,7 +72,6 @@ const Form = () => {
 
   const onSubmitHandler = e => {
     e.preventDefault();
-    console.log('Submitted Form Data:', formState);
   }
 
   const inputTemplate = (form) => {
