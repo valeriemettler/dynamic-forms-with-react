@@ -49,7 +49,7 @@ const formFieldsData = [
 const createInitialState = () => {
   const initialState = {};
   formFieldsData.find(item=> {
-    initialState[item.name] = '';
+    return initialState[item.name] = '';
   })
   return initialState;
 };
