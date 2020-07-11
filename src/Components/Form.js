@@ -54,18 +54,70 @@ const createInitialState = () => {
   return initialState;
 };
 
-const onSubmitHandler = e => {
-  e.preventDefault();
-  console.log('Submitted Form Data:');
-}
 
 const Form = () => {
   const [formState, setFormState] = useState(createInitialState());
 
+  const onChangeHandler = e => {
+    const value = 
+      e.target.type === 'checkbox'
+        ? e.target.checked 
+        : e.target.value;
+
+    setFormState({
+      ...formState,
+      [e.target.name]: value,
+    });
+  }
+
+  const onSubmitHandler = e => {
+    e.preventDefault();
+    console.log('Submitted Form Data:', formState);
+  }
+
+  const inputTemplate = (form) => {
+    return (
+      <div className={"form-control " + (form.conditional ? 'checkbox-container' : '')} key={form.name}>
+        <label htmlFor={form.name}>{form.human_label}</label>
+        <input 
+          type={form.type}
+          id={form.name} 
+          name={form.name}
+          onChange={onChangeHandler}
+          value={formState.name}
+          checked={formState.parental_consent}
+        />
+      </div>
+    );
+  } 
+
+  const needParentalConsent = (form) => {
+    const year = formState.date_of_birth.substr(0,4);
+    const month = formState.date_of_birth.substr(5,2);
+    const day = formState.date_of_birth.substr(8,2);
+    const birthDate = new Date(year, month, day);
+    return form.conditional.show_if(birthDate);
+  }
+
   return (
   <form onSubmit={onSubmitHandler}>
     <h1>Create Your Account</h1>
-    <button className="btn" type="submit">Create My Account</button>
+    {formFieldsData.map(form => {
+      if(!form.conditional){
+        return inputTemplate(form);
+      } else {
+        if(formState.date_of_birth && needParentalConsent(form)){
+          return inputTemplate(form)
+        } else {
+          return null;
+        }
+      }
+    })}
+    <button className="btn" type="submit">
+      Create My Account
+    </button>
+    <p>Form State to Demo Code Behavior</p>
+      <pre>{JSON.stringify({formState}, null, 4)}</pre>
   </form>
   );
 };
